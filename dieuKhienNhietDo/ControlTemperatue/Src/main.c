@@ -32,9 +32,9 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
-#include "math.h"
-/* USER CODE BEGIN Includes */
 
+/* USER CODE BEGIN Includes */
+#include "math.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -47,8 +47,10 @@ TIM_HandleTypeDef htim2;
 /* Private variables ---------------------------------------------------------*/
 volatile float value_Temperatue;
 float valuuint16_te1;
-float res2,temp,tr;
+float res2,temp,tr,temp_set=30, loi,loi_tr, i_loi=0,dloi=0;
 float res1 = 10000;
+float kp =2,kd=5,ki=3;
+int pwm=0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -64,7 +66,7 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 	void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
-	void convert_valueTemperatue();
+	void convert_valueTemperatue(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -103,15 +105,19 @@ int main(void)
   while (1)
   {
   /* USER CODE END WHILE */
- //  value_Temperatue = HAL_ADC_GetValue(&hadc1);
-	
-		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,value_Temperatue/41);
-//			HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
-		convert_valueTemperatue();
-		HAL_Delay(100);
-		
-  /* USER CODE BEGIN 3 */
 
+  /* USER CODE BEGIN 3 */
+		             convert_valueTemperatue();	
+								 loi=temp_set-temp;
+								 i_loi=i_loi+loi;
+						     dloi=loi_tr-loi;
+								 pwm=kp*loi +   ki*i_loi +  kd*dloi;
+								 if(pwm>100)pwm=100;
+		            __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,pwm);
+								 HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
+								 loi_tr=loi;
+		             HAL_Delay(50);
+	
   }
   /* USER CODE END 3 */
 
