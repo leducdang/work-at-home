@@ -1,0 +1,23 @@
+--cpu Cortex-M3
+"controltemperatue\system_stm32f1xx.o"
+"controltemperatue\stm32f1xx_hal_dma.o"
+"controltemperatue\stm32f1xx_hal_adc.o"
+"controltemperatue\stm32f1xx_hal_tim_ex.o"
+"controltemperatue\stm32f1xx_hal_tim.o"
+"controltemperatue\stm32f1xx_hal_adc_ex.o"
+"controltemperatue\stm32f1xx_hal.o"
+"controltemperatue\stm32f1xx_hal_cortex.o"
+"controltemperatue\stm32f1xx_hal_flash_ex.o"
+"controltemperatue\stm32f1xx_hal_pwr.o"
+"controltemperatue\stm32f1xx_hal_flash.o"
+"controltemperatue\stm32f1xx_hal_rcc.o"
+"controltemperatue\stm32f1xx_hal_rcc_ex.o"
+"controltemperatue\stm32f1xx_hal_gpio.o"
+"controltemperatue\stm32f1xx_hal_msp.o"
+"controltemperatue\main.o"
+"controltemperatue\stm32f1xx_it.o"
+"controltemperatue\startup_stm32f103xb.o"
+--library_type=microlib --strict --scatter "ControlTemperatue\ControlTemperatue.sct"
+--diag_suppress=L6329 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "ControlTemperatue.map" -o ControlTemperatue\ControlTemperatue.axf
