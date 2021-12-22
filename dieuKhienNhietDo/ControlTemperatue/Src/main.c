@@ -47,9 +47,9 @@ TIM_HandleTypeDef htim2;
 /* Private variables ---------------------------------------------------------*/
 volatile float value_Temperatue;
 float valuuint16_te1;
-float res2,temp,tr,temp_set=30, loi,loi_tr, i_loi=0,dloi=0;
+float res2,temp,tr,temp_set=100, loi,loi_tr, i_loi=0,dloi=0;
 float res1 = 10000;
-float kp =2,kd=5,ki=3;
+float kp =0.2,kd=0.05,ki=0.003;
 int pwm=0;
 /* USER CODE END PV */
 
@@ -107,16 +107,33 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-		             convert_valueTemperatue();	
+		             convert_valueTemperatue();
+						if(temp_set>temp)
+						{
 								 loi=temp_set-temp;
 								 i_loi=i_loi+loi;
+										if(i_loi>200)i_loi=200;
 						     dloi=loi_tr-loi;
-								 pwm=kp*loi +   ki*i_loi +  kd*dloi;
+								 pwm = pwm + kp*loi +   ki*i_loi +  kd*dloi;
 								 if(pwm>100)pwm=100;
 		            __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,pwm);
 								 HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
 								 loi_tr=loi;
 		             HAL_Delay(50);
+						}
+						else
+						{
+								 loi=temp - temp_set;
+								 i_loi=i_loi+loi;
+										if(i_loi>200)i_loi=200;
+						     dloi=loi_tr-loi;
+								 pwm = pwm - kp*loi +   ki*i_loi +  kd*dloi;
+								 if(pwm<0) pwm=0;
+		            __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,pwm);
+								 HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
+								 loi_tr=loi;
+		             HAL_Delay(50);
+						}
 	
   }
   /* USER CODE END 3 */
